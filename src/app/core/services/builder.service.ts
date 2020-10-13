@@ -5,6 +5,7 @@ import { map } from 'rxjs/operators';
 import { Page, PageView } from './interface/dto';
 import { BuilderOptions, BuilderType } from './interface/project';
 import { SelectItem } from './interface/selectItem';
+import { TemplateType } from './template.service';
 
 @Injectable({
   providedIn: 'root',
@@ -18,12 +19,27 @@ export class BuilderService {
     return this.client.get<PageView<BuilderOptions>>(`api/builder?pageNumber=${page.pageNumber}&pageSize=${page.pageSize}`);
   }
 
-  getBuilderSelect(builderType: BuilderType): Observable<SelectItem[]> {
-    const type = builderType === BuilderType.Builder ? 0 : 1;
+  getBuilderSelect(type: BuilderType | undefined): Observable<SelectItem[]> {
     return this.client.get<PageView<BuilderOptions>>(`api/builder?pageNumber=1&pageSize=100&builderType=${type}`).pipe(
       map((m) =>
-        m.datas.map<SelectItem>((s) => {
-          return new SelectItem(s.id.toString(), s.id, s.name, s.name);
+        m.datas.map<SelectItem>((s: BuilderOptions) => {
+          let templateTypeLabel = ``;
+          switch (s.templateType) {
+            case 0:
+              templateTypeLabel = `codefirst`;
+              break;
+            case 1:
+              templateTypeLabel = `dbfirst`;
+              break;
+            case 2:
+              templateTypeLabel = `global`;
+              break;
+            default:
+              templateTypeLabel = `unknow`;
+              break;
+          }
+          const title = `${s.name}[${templateTypeLabel}]`;
+          return new SelectItem(s.id.toString(), s.id, title, title);
         }),
       ),
     );

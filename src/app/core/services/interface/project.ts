@@ -87,6 +87,7 @@ export class BuilderOptions {
   suffix: string;
   type: BuilderType = BuilderType.Builder;
   fileExtensions = `cs`;
+  templateType: number;
   projects: Project[];
 }
 

@@ -11,6 +11,7 @@ import { GeneratorProjectEditComponent } from './edit/edit.component';
 @Component({
   selector: 'fb-generator-project',
   templateUrl: './project.component.html',
+  styles: [``],
 })
 export class GeneratorProjectComponent implements OnInit {
   page: Page;
@@ -89,7 +90,7 @@ export class GeneratorProjectComponent implements OnInit {
     this.page = new Page();
   }
 
-  ngOnInit() { }
+  ngOnInit() {}
   add() {
     this.modal
       .createStatic(

@@ -30,6 +30,10 @@ import { GeneratorConfigEditComponent } from '../../config/edit/edit.component';
       :host ::ng-deep .sf__fixed {
         flex-flow: wrap;
       }
+
+      :host ::ng-deep .sf .ant-transfer-list {
+        width: 300px;
+      }
     `,
   ],
 })
@@ -70,7 +74,7 @@ export class GeneratorProjectEditComponent implements OnInit {
     public projectService: ProjectService,
     public builderService: BuilderService,
     public configService: GeneratorconfigService,
-  ) { }
+  ) {}
 
   ngOnInit(): void {
     if (this.record.id > 0) {

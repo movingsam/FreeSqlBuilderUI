@@ -6,18 +6,27 @@ import { Page, PageView } from './interface/dto';
 import { Template } from './interface/project';
 import { SelectItem } from './interface/selectItem';
 
+export class TemplatePage extends Page {
+  templateType: TemplateType;
+}
+
+export enum TemplateType {
+  CodeFirst,
+  DbFirst,
+  Global,
+  UnKnow,
+}
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class TemplateService {
-
-  constructor(private client: _HttpClient) { }
+  constructor(private client: _HttpClient) {}
   /**
    * 获取模板分页数据
    * @param page 分页信息
    */
-  getTemplatePage(page: Page): Observable<PageView<Template>> {
-    return this.client.get<PageView<Template>>(`api/template/Page?pageNumber=${page.pageNumber}&pageSize=${page.pageSize}`);
+  getTemplatePage(page: TemplatePage): Observable<PageView<Template>> {
+    return this.client.get<PageView<Template>>(`api/template/Page`, page);
   }
   /**
    * 刷新模板
@@ -28,8 +37,9 @@ export class TemplateService {
   /**
    * 获取模板选项
    */
-  getTemplateSelect(): Observable<SelectItem[]> {
-    return this.client.get<PageView<Template>>(`api/template/Page?pageNumber=1&pageSize=100`).pipe(map(m => m.datas.map<SelectItem>(d =>
-      new SelectItem(d.id.toString(), d.id, d.templateName, d.templateName))));
+  getTemplateSelect(page: TemplatePage): Observable<SelectItem[]> {
+    return this.client
+      .get<PageView<Template>>(`api/template/Page?pageNumber=1&pageSize=100`, page)
+      .pipe(map((m) => m.datas.map<SelectItem>((d) => new SelectItem(d.id.toString(), d.id, d.templateName, d.templateName))));
   }
-}  
+}

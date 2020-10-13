@@ -8,7 +8,7 @@ import { BuilderService } from 'src/app/core/services/builder.service';
 import { GeneratorconfigService } from 'src/app/core/services/generatorconfig.service';
 import { BuilderOptions, GeneratorModeConfig } from 'src/app/core/services/interface/project';
 import { ProjectService } from 'src/app/core/services/project.service';
-import { TemplateService } from 'src/app/core/services/template.service';
+import { TemplatePage, TemplateService } from 'src/app/core/services/template.service';
 
 @Component({
   selector: 'fb-generator-builder-edit',
@@ -24,18 +24,22 @@ export class GeneratorBuilderEditComponent implements OnInit {
       suffix: {
         type: 'string',
         title: '类名后缀',
-        ui: { placeholder: '生成文件名及类名的后缀' }
+        ui: { placeholder: '生成文件名及类名的后缀' },
       },
       outPutPath: {
         type: 'string',
         title: '输出路径',
         ui: {
-          placeholder: '用来放置此构建器生成的文件夹名'
-        }
+          placeholder: '用来放置此构建器生成的文件夹名',
+        },
       },
       mode: {
         type: 'number',
-        enum: [{ label: '默认', value: 0, key: 0 }, { label: '首字母大写', value: 1, key: 1 }, { label: '全小写', value: 2, key: 2 }],
+        enum: [
+          { label: '默认', value: 0, key: 0 },
+          { label: '首字母大写', value: 1, key: 1 },
+          { label: '全小写', value: 2, key: 2 },
+        ],
         ui: {
           widget: 'radio',
         },
@@ -47,20 +51,23 @@ export class GeneratorBuilderEditComponent implements OnInit {
         ui: {
           widget: 'select',
           asyncData: () => {
-            return this.templateService.getTemplateSelect();
-          }
-        }
+            return this.templateService.getTemplateSelect(new TemplatePage());
+          },
+        },
       },
 
       type: {
         type: 'number',
         title: '构建器类型',
-        enum: [{ label: '单表构建器', value: 0, key: 0 }, { label: '全表构建器', value: 1, key: 1 }],
-        ui: { widget: 'radio' }
+        enum: [
+          { label: '单表构建器', value: 0, key: 0 },
+          { label: '全表构建器', value: 1, key: 1 },
+        ],
+        ui: { widget: 'radio' },
       },
       fileExtensions: {
         type: 'string',
-        title: '文件后缀'
+        title: '文件后缀',
       },
       // defaultConfigId: {
       //   type: 'number',
@@ -79,9 +86,9 @@ export class GeneratorBuilderEditComponent implements OnInit {
           widget: 'select',
           asyncData: () => {
             return this.projectService.getSelect();
-          }
-        }
-      }
+          },
+        },
+      },
     },
     required: ['fileExtensions', 'name', 'outPutPath', 'templateId'],
   };
@@ -91,7 +98,7 @@ export class GeneratorBuilderEditComponent implements OnInit {
       grid: { span: 12 },
     },
     $no: {
-      widget: 'text'
+      widget: 'text',
     },
     $href: {
       widget: 'string',
@@ -109,24 +116,24 @@ export class GeneratorBuilderEditComponent implements OnInit {
     private configService: GeneratorconfigService,
     private templateService: TemplateService,
     public http: _HttpClient,
-    private projectService: ProjectService
-  ) { }
+    private projectService: ProjectService,
+  ) {}
 
   ngOnInit(): void {
     if (this.record.id > 0) {
-      this.service.getBuilderById(this.record.id).subscribe(res => (this.i = res));
+      this.service.getBuilderById(this.record.id).subscribe((res) => (this.i = res));
     }
     this.i = new BuilderOptions();
   }
 
   save(value: any) {
     if (this.record.id > 0) {
-      this.service.updateBuilder(value).subscribe(r => {
+      this.service.updateBuilder(value).subscribe((r) => {
         this.msgSrv.success(`更新成功`);
         this.modal.close(true);
       });
     } else {
-      this.service.createBuilder(value).subscribe(r => {
+      this.service.createBuilder(value).subscribe((r) => {
         if (r.id > 0) {
           this.msgSrv.success(`新增成功`);
           this.modal.close(true);
